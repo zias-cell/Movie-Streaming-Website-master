@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="250" height="360" viewBox="0 0 250 360" role="img" aria-label="Image unavailable">
+  <rect width="250" height="360" fill="#181818"/>
+  <rect x="1" y="1" width="248" height="358" fill="none" stroke="#2e2e2e" stroke-width="2"/>
+  <circle cx="125" cy="150" r="38" fill="none" stroke="#3a3a3a" stroke-width="4"/>
+  <polygon points="113,131 113,169 146,150" fill="#3a3a3a"/>
+  <text x="125" y="232" fill="#7a7a7a" font-family="Ubuntu, Arial, sans-serif" font-size="15" text-anchor="middle">Image unavailable</text>
+  <text x="125" y="256" fill="#4d4d4d" font-family="Ubuntu, Arial, sans-serif" font-size="12" text-anchor="middle">ApnaTheatre</text>
+</svg>
