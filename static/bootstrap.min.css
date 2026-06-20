@@ -1,0 +1,9 @@
+/*
+ * bootstrap.min.css — PLACEHOLDER
+ *
+ * The vendored Bootstrap stylesheet referenced by the pages was not part of the
+ * repository upload. This stub imports Bootstrap 5.0.1 from the CDN (the same
+ * version already used elsewhere in the project) so layouts that depend on it
+ * still render. Vendor a local copy here if you need offline support.
+ */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css");
