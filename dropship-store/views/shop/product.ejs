@@ -1,0 +1,74 @@
+<%- include('../partials/header') %>
+
+<nav class="breadcrumb">
+  <a href="/">Home</a> ›
+  <a href="/shop?category=<%= encodeURIComponent(product.category) %>"><%= product.category %></a> ›
+  <span><%= product.title %></span>
+</nav>
+
+<div class="product-detail">
+  <div class="pd-media">
+    <img src="/img/product/<%= product.slug %>.svg" alt="<%= product.title %>" width="600" height="600" />
+    <% if (product.compare_at_cents > product.price_cents) { %>
+      <% var pct = Math.round((1 - product.price_cents / product.compare_at_cents) * 100); %>
+      <span class="badge-sale lg">-<%= pct %>%</span>
+    <% } %>
+  </div>
+
+  <div class="pd-info">
+    <span class="card-cat"><%= product.category %></span>
+    <h1><%= product.title %></h1>
+    <div class="card-rating">
+      <span class="stars">★★★★★</span>
+      <span class="rating-num"><%= product.rating.toFixed(1) %></span>
+      <span class="muted">· 1,200+ sold</span>
+    </div>
+
+    <div class="pd-price">
+      <span class="price lg"><%= money(product.price_cents) %></span>
+      <% if (product.compare_at_cents > product.price_cents) { %>
+        <span class="compare lg"><%= money(product.compare_at_cents) %></span>
+        <span class="save-pill">You save <%= money(product.compare_at_cents - product.price_cents) %></span>
+      <% } %>
+    </div>
+
+    <p class="pd-desc"><%= product.description %></p>
+
+    <ul class="pd-stock">
+      <% if (product.stock > 0) { %>
+        <li class="in-stock">● In stock<% if (product.stock < 10) { %> — only <%= product.stock %> left!<% } %></li>
+      <% } else { %>
+        <li class="out-stock">● Currently sold out</li>
+      <% } %>
+      <li>🚚 Ships free on US orders over <%= money(freeShipThreshold) %></li>
+      <li>↩️ 30-day money-back guarantee</li>
+    </ul>
+
+    <form action="/cart/add" method="post" class="pd-add">
+      <input type="hidden" name="product_id" value="<%= product.id %>" />
+      <input type="hidden" name="redirect" value="cart" />
+      <div class="qty">
+        <label for="quantity">Qty</label>
+        <input type="number" id="quantity" name="quantity" value="1" min="1" max="<%= Math.max(1, Math.min(99, product.stock)) %>" />
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg" <%= product.stock <= 0 ? 'disabled' : '' %>>
+        <%= product.stock <= 0 ? 'Sold out' : 'Add to cart' %>
+      </button>
+    </form>
+
+    <div class="pd-pay">🔒 Guaranteed safe checkout · Visa · Mastercard · Amex · PayPal</div>
+  </div>
+</div>
+
+<% if (related.length) { %>
+<section class="section">
+  <div class="section-head"><h2>You may also like</h2></div>
+  <div class="grid">
+    <% related.forEach(function(product){ %>
+      <%- include('../partials/product-card', { p: product }) %>
+    <% }); %>
+  </div>
+</section>
+<% } %>
+
+<%- include('../partials/footer') %>

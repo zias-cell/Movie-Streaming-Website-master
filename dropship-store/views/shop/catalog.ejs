@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+
+<div class="catalog-head">
+  <div>
+    <h1><%= title %></h1>
+    <p class="muted"><%= products.length %> product<%= products.length === 1 ? '' : 's' %></p>
+  </div>
+  <form class="sort" method="get" action="/shop">
+    <% if (activeCategory) { %><input type="hidden" name="category" value="<%= activeCategory %>" /><% } %>
+    <% if (query) { %><input type="hidden" name="q" value="<%= query %>" /><% } %>
+    <label for="sort">Sort</label>
+    <select id="sort" name="sort" onchange="this.form.submit()">
+      <option value="new" <%= sort === 'new' ? 'selected' : '' %>>Newest</option>
+      <option value="price-asc" <%= sort === 'price-asc' ? 'selected' : '' %>>Price: Low to High</option>
+      <option value="price-desc" <%= sort === 'price-desc' ? 'selected' : '' %>>Price: High to Low</option>
+    </select>
+  </form>
+</div>
+
+<% if (products.length === 0) { %>
+  <div class="empty">
+    <p class="empty-emoji">🔍</p>
+    <h2>No products found</h2>
+    <p class="muted">Try a different search or browse all products.</p>
+    <a href="/shop" class="btn btn-primary">Browse all</a>
+  </div>
+<% } else { %>
+  <div class="grid">
+    <% products.forEach(function(product){ %>
+      <%- include('../partials/product-card', { p: product }) %>
+    <% }); %>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>

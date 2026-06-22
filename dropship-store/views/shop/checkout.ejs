@@ -1,0 +1,104 @@
+<%- include('../partials/header') %>
+
+<h1 class="page-title">Checkout</h1>
+
+<% if (errors && errors.length) { %>
+  <div class="alert alert-error">
+    <strong>Please fix the following:</strong>
+    <ul><% errors.forEach(function(e){ %><li><%= e %></li><% }); %></ul>
+  </div>
+<% } %>
+
+<form action="/checkout" method="post" class="checkout-layout" autocomplete="on">
+  <div class="checkout-main">
+    <section class="form-card">
+      <h2>Contact</h2>
+      <div class="field">
+        <label for="email">Email <span class="req">*</span></label>
+        <input type="email" id="email" name="email" value="<%= form.email || '' %>" required placeholder="you@example.com" />
+      </div>
+    </section>
+
+    <section class="form-card">
+      <h2>Shipping address <span class="us-flag">🇺🇸 US only</span></h2>
+      <div class="field">
+        <label for="customer_name">Full name <span class="req">*</span></label>
+        <input type="text" id="customer_name" name="customer_name" value="<%= form.customer_name || '' %>" required />
+      </div>
+      <div class="field">
+        <label for="address1">Address <span class="req">*</span></label>
+        <input type="text" id="address1" name="address1" value="<%= form.address1 || '' %>" required placeholder="123 Main St" />
+      </div>
+      <div class="field">
+        <label for="address2">Apartment, suite, etc. (optional)</label>
+        <input type="text" id="address2" name="address2" value="<%= form.address2 || '' %>" />
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="city">City <span class="req">*</span></label>
+          <input type="text" id="city" name="city" value="<%= form.city || '' %>" required />
+        </div>
+        <div class="field">
+          <label for="state">State <span class="req">*</span></label>
+          <select id="state" name="state" required>
+            <option value="">Select…</option>
+            <% states.forEach(function(s){ %>
+              <option value="<%= s[0] %>" <%= form.state === s[0] ? 'selected' : '' %>><%= s[1] %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="field">
+          <label for="zip">ZIP <span class="req">*</span></label>
+          <input type="text" id="zip" name="zip" value="<%= form.zip || '' %>" required inputmode="numeric" placeholder="90210" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="phone">Phone (optional)</label>
+        <input type="tel" id="phone" name="phone" value="<%= form.phone || '' %>" placeholder="(555) 123-4567" />
+      </div>
+    </section>
+
+    <section class="form-card">
+      <h2>Payment</h2>
+      <p class="demo-note">🧪 <strong>Demo gateway.</strong> No real charge is made. Use test card <code>4242 4242 4242 4242</code>, any future date and CVC.</p>
+      <div class="field">
+        <label for="card_number">Card number <span class="req">*</span></label>
+        <input type="text" id="card_number" name="card_number" value="<%= form.card_number || '' %>" inputmode="numeric" placeholder="4242 4242 4242 4242" autocomplete="cc-number" />
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="card_exp">Expiry</label>
+          <input type="text" id="card_exp" name="card_exp" value="<%= form.card_exp || '' %>" placeholder="MM/YY" autocomplete="cc-exp" />
+        </div>
+        <div class="field">
+          <label for="card_cvc">CVC</label>
+          <input type="text" id="card_cvc" name="card_cvc" value="<%= form.card_cvc || '' %>" placeholder="123" autocomplete="cc-csc" />
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <aside class="checkout-summary">
+    <h2>Your order</h2>
+    <div class="co-items">
+      <% items.forEach(function(it){ %>
+        <div class="co-item">
+          <img src="/img/product/<%= it.product.slug %>.svg" alt="<%= it.product.title %>" width="48" height="48" />
+          <span class="co-qty"><%= it.quantity %>×</span>
+          <span class="co-name"><%= it.product.title %></span>
+          <span class="co-price"><%= money(it.lineTotalCents) %></span>
+        </div>
+      <% }); %>
+    </div>
+    <div class="sum-row"><span>Subtotal</span><span><%= money(totals.subtotalCents) %></span></div>
+    <div class="sum-row"><span>Shipping</span><span><%= totals.shippingCents === 0 ? 'FREE' : money(totals.shippingCents) %></span></div>
+    <% if (totals.taxCents > 0) { %>
+      <div class="sum-row"><span>Tax</span><span><%= money(totals.taxCents) %></span></div>
+    <% } %>
+    <div class="sum-row total"><span>Total</span><span><%= money(totals.totalCents) %></span></div>
+    <button type="submit" class="btn btn-primary btn-block btn-lg">Pay <%= money(totals.totalCents) %></button>
+    <p class="secure-note">🔒 Secure SSL checkout · We never store your card</p>
+  </aside>
+</form>
+
+<%- include('../partials/footer') %>

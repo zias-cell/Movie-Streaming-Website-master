@@ -1,0 +1,101 @@
+<%- include('../partials/admin-header') %>
+
+<a href="/admin/orders" class="back-link">← Back to orders</a>
+
+<% var profit = order.total_cents - order.shipping_cents - order.tax_cents - order.supplier_cost_cents; %>
+
+<div class="order-head">
+  <div>
+    <h2><%= order.order_number %> <span class="pill pill-<%= order.status %>"><%= order.status %></span></h2>
+    <p class="muted">Placed <%= order.created_at %> · <%= order.payment_method %> · ref <%= order.payment_ref %></p>
+  </div>
+  <div class="order-head-totals">
+    <div><span class="muted">Total</span> <strong><%= money(order.total_cents) %></strong></div>
+    <div><span class="muted">Profit</span> <strong class="<%= profit > 0 ? 'good' : 'bad' %>"><%= money(profit) %></strong></div>
+  </div>
+</div>
+
+<div class="order-grid">
+  <div>
+    <section class="panel">
+      <div class="panel-head"><h2>Items to fulfill</h2></div>
+      <table class="table">
+        <thead><tr><th>Product</th><th class="right">Price</th><th class="right">Cost</th><th class="right">Qty</th><th class="right">Margin</th></tr></thead>
+        <tbody>
+          <% items.forEach(function(it){ %>
+            <% var m = (it.price_cents - it.supplier_cost_cents) * it.quantity; %>
+            <tr>
+              <td><strong><%= it.title %></strong><br><span class="muted sm">SKU <%= it.sku || '—' %></span></td>
+              <td class="right"><%= money(it.price_cents) %></td>
+              <td class="right muted"><%= money(it.supplier_cost_cents) %></td>
+              <td class="right"><%= it.quantity %></td>
+              <td class="right <%= m > 0 ? 'good' : 'bad' %>"><%= money(m) %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <div class="order-money">
+        <div class="sum-row"><span>Subtotal</span><span><%= money(order.subtotal_cents) %></span></div>
+        <div class="sum-row"><span>Shipping</span><span><%= money(order.shipping_cents) %></span></div>
+        <div class="sum-row"><span>Tax</span><span><%= money(order.tax_cents) %></span></div>
+        <div class="sum-row"><span>Supplier cost (COGS)</span><span class="bad">−<%= money(order.supplier_cost_cents) %></span></div>
+        <div class="sum-row total"><span>Net profit</span><span class="<%= profit > 0 ? 'good' : 'bad' %>"><%= money(profit) %></span></div>
+      </div>
+    </section>
+
+    <section class="panel pad">
+      <h2>Customer &amp; shipping</h2>
+      <div class="info-cols">
+        <div>
+          <h4>Contact</h4>
+          <p><%= order.customer_name %><br><a href="mailto:<%= order.email %>"><%= order.email %></a><br><%= order.phone || 'No phone' %></p>
+        </div>
+        <div>
+          <h4>Ship to (US)</h4>
+          <address><%= order.address1 %><br><% if (order.address2) { %><%= order.address2 %><br><% } %><%= order.city %>, <%= order.state %> <%= order.zip %><br>United States</address>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <aside>
+    <section class="panel pad">
+      <h2>Fulfillment</h2>
+      <form action="/admin/orders/<%= order.id %>" method="post">
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status" name="status">
+            <% statuses.forEach(function(s){ %>
+              <option value="<%= s %>" <%= order.status === s ? 'selected' : '' %>><%= s %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="field">
+          <label for="supplier_order_ref">Supplier order #</label>
+          <input type="text" id="supplier_order_ref" name="supplier_order_ref" value="<%= order.supplier_order_ref || '' %>" placeholder="e.g. AE-8830042" />
+        </div>
+        <div class="field">
+          <label for="tracking_number">Tracking number</label>
+          <input type="text" id="tracking_number" name="tracking_number" value="<%= order.tracking_number || '' %>" placeholder="USPS / carrier tracking" />
+        </div>
+        <div class="field">
+          <label for="notes">Internal notes</label>
+          <textarea id="notes" name="notes" rows="3"><%= order.notes || '' %></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Update order</button>
+      </form>
+    </section>
+
+    <section class="panel pad helper">
+      <h2>📦 Dropship checklist</h2>
+      <ol class="checklist">
+        <li>Place the order with your supplier for the items above.</li>
+        <li>Enter the supplier order # and set status to <strong>fulfilled</strong>.</li>
+        <li>Add the carrier tracking # and set status to <strong>shipped</strong>.</li>
+        <li>Email the customer their tracking at <a href="mailto:<%= order.email %>"><%= order.email %></a>.</li>
+      </ol>
+    </section>
+  </aside>
+</div>
+
+<%- include('../partials/admin-footer') %>

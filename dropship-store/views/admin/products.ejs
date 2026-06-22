@@ -1,0 +1,51 @@
+<%- include('../partials/admin-header') %>
+
+<div class="page-actions">
+  <p class="muted"><%= products.length %> product<%= products.length === 1 ? '' : 's' %></p>
+  <a href="/admin/products/new" class="btn btn-primary">+ New product</a>
+</div>
+
+<% if (products.length === 0) { %>
+  <div class="panel pad center">
+    <p>No products yet.</p>
+    <a href="/admin/products/new" class="btn btn-primary">Add your first product</a>
+  </div>
+<% } else { %>
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Product</th><th>Category</th><th class="right">Price</th>
+        <th class="right">Cost</th><th class="right">Margin</th><th class="right">Stock</th>
+        <th>Status</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% products.forEach(function(p){ %>
+        <% var margin = p.price_cents - p.supplier_cost_cents; %>
+        <% var marginPct = p.price_cents > 0 ? Math.round((margin / p.price_cents) * 100) : 0; %>
+        <tr>
+          <td class="prod-cell">
+            <img src="/img/product/<%= p.slug %>.svg" alt="" width="40" height="40" />
+            <div><strong><%= p.title %></strong><br><span class="muted sm"><%= p.sku || '—' %></span></div>
+          </td>
+          <td><%= p.category %></td>
+          <td class="right"><%= money(p.price_cents) %></td>
+          <td class="right muted"><%= money(p.supplier_cost_cents) %></td>
+          <td class="right <%= margin > 0 ? 'good' : 'bad' %>"><%= money(margin) %><br><span class="sm"><%= marginPct %>%</span></td>
+          <td class="right <%= p.stock < 5 ? 'bad' : '' %>"><%= p.stock %></td>
+          <td><span class="pill <%= p.active ? 'pill-paid' : 'pill-cancelled' %>"><%= p.active ? 'Active' : 'Hidden' %></span></td>
+          <td class="right nowrap">
+            <a href="/admin/products/<%= p.id %>/edit" class="btn-sm">Edit</a>
+            <form action="/admin/products/<%= p.id %>/delete" method="post" class="inline" onsubmit="return confirm('Delete &quot;<%= p.title %>&quot;? This cannot be undone.');">
+              <button type="submit" class="btn-sm danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+<% } %>
+
+<%- include('../partials/admin-footer') %>

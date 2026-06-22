@@ -1,0 +1,61 @@
+<%- include('../partials/admin-header') %>
+
+<% if (saved) { %><div class="alert alert-success">✓ Settings saved.</div><% } %>
+
+<form action="/admin/settings" method="post" class="form-wide">
+  <div class="form-cols">
+    <div class="form-col">
+      <section class="panel pad">
+        <h2>Storefront</h2>
+        <div class="field">
+          <label for="store_name">Store name</label>
+          <input type="text" id="store_name" name="store_name" value="<%= settings.store_name %>" />
+        </div>
+        <div class="field">
+          <label for="store_tagline">Tagline</label>
+          <input type="text" id="store_tagline" name="store_tagline" value="<%= settings.store_tagline %>" />
+        </div>
+        <div class="field">
+          <label for="announcement">Announcement bar</label>
+          <input type="text" id="announcement" name="announcement" value="<%= settings.announcement %>" />
+          <span class="muted sm">Shown across the top of every storefront page. Leave blank to hide.</span>
+        </div>
+        <div class="field">
+          <label for="support_email">Support email</label>
+          <input type="email" id="support_email" name="support_email" value="<%= settings.support_email %>" />
+        </div>
+      </section>
+    </div>
+
+    <div class="form-col">
+      <section class="panel pad">
+        <h2>Shipping &amp; tax (US)</h2>
+        <div class="field">
+          <label for="shipping_flat">Flat shipping rate (USD)</label>
+          <input type="number" step="0.01" min="0" id="shipping_flat" name="shipping_flat" value="<%= toDollars(settings.shipping_flat_cents) %>" />
+        </div>
+        <div class="field">
+          <label for="free_shipping_threshold">Free shipping over (USD)</label>
+          <input type="number" step="0.01" min="0" id="free_shipping_threshold" name="free_shipping_threshold" value="<%= toDollars(settings.free_shipping_threshold_cents) %>" />
+          <span class="muted sm">Set to 0 to always charge the flat rate.</span>
+        </div>
+        <div class="field">
+          <label for="tax_rate_pct">Sales tax rate (%)</label>
+          <input type="number" step="0.01" min="0" id="tax_rate_pct" name="tax_rate_pct" value="<%= (parseInt(settings.tax_rate_bps, 10) / 100).toFixed(2) %>" />
+          <span class="muted sm">Applied to order subtotals at checkout. US sales tax varies by state/nexus — set the rate appropriate to where you collect.</span>
+        </div>
+      </section>
+
+      <section class="panel pad muted-panel">
+        <h2>Payments</h2>
+        <p class="muted sm">The store currently uses the built-in <strong>demo checkout</strong> (no real charges). To accept live payments, add your Stripe keys to the server's <code>.env</code> file and follow the integration notes in <code>README.md</code>.</p>
+      </section>
+    </div>
+  </div>
+
+  <div class="form-bar">
+    <button type="submit" class="btn btn-primary">Save settings</button>
+  </div>
+</form>
+
+<%- include('../partials/admin-footer') %>

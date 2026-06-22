@@ -1,0 +1,45 @@
+<%- include('../partials/header') %>
+
+<div class="confirm">
+  <div class="confirm-check">✓</div>
+  <h1>Thank you<%= order.customer_name ? ', ' + order.customer_name.split(' ')[0] : '' %>!</h1>
+  <p class="muted">Your order has been placed. A confirmation was sent to <strong><%= order.email %></strong>.</p>
+  <p class="order-num">Order <strong><%= order.order_number %></strong></p>
+
+  <div class="confirm-grid">
+    <section class="form-card">
+      <h2>Order summary</h2>
+      <div class="co-items">
+        <% items.forEach(function(it){ %>
+          <div class="co-item">
+            <span class="co-qty"><%= it.quantity %>×</span>
+            <span class="co-name"><%= it.title %></span>
+            <span class="co-price"><%= money(it.price_cents * it.quantity) %></span>
+          </div>
+        <% }); %>
+      </div>
+      <div class="sum-row"><span>Subtotal</span><span><%= money(order.subtotal_cents) %></span></div>
+      <div class="sum-row"><span>Shipping</span><span><%= order.shipping_cents === 0 ? 'FREE' : money(order.shipping_cents) %></span></div>
+      <% if (order.tax_cents > 0) { %>
+        <div class="sum-row"><span>Tax</span><span><%= money(order.tax_cents) %></span></div>
+      <% } %>
+      <div class="sum-row total"><span>Total paid</span><span><%= money(order.total_cents) %></span></div>
+    </section>
+
+    <section class="form-card">
+      <h2>Shipping to</h2>
+      <address class="ship-addr">
+        <%= order.customer_name %><br>
+        <%= order.address1 %><br>
+        <% if (order.address2) { %><%= order.address2 %><br><% } %>
+        <%= order.city %>, <%= order.state %> <%= order.zip %><br>
+        United States
+      </address>
+      <p class="muted">📦 Estimated delivery: 5–9 business days. We'll email tracking once it ships.</p>
+    </section>
+  </div>
+
+  <a href="/shop" class="btn btn-primary btn-lg">Continue shopping</a>
+</div>
+
+<%- include('../partials/footer') %>

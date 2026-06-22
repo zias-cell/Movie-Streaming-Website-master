@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= title %> · <%= storeName %> Admin</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>" />
+</head>
+<body class="admin">
+  <aside class="sidebar">
+    <a href="/admin" class="side-brand"><span>🛍️</span> <%= storeName %></a>
+    <nav class="side-nav">
+      <a href="/admin" class="<%= currentPath === '/' || currentPath === '/admin' ? 'active' : '' %>"><span>📊</span> Dashboard</a>
+      <a href="/admin/products" class="<%= currentPath.indexOf('/products') === 0 ? 'active' : '' %>"><span>📦</span> Products</a>
+      <a href="/admin/orders" class="<%= currentPath.indexOf('/orders') === 0 ? 'active' : '' %>"><span>🧾</span> Orders</a>
+      <a href="/admin/settings" class="<%= currentPath.indexOf('/settings') === 0 ? 'active' : '' %>"><span>⚙️</span> Settings</a>
+    </nav>
+    <div class="side-foot">
+      <a href="/" target="_blank" class="view-store">↗ View store</a>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-top">
+      <h1><%= title %></h1>
+      <div class="admin-user">
+        <span class="muted"><%= adminEmail %></span>
+        <form action="/admin/logout" method="post" class="inline">
+          <button type="submit" class="btn-link">Log out</button>
+        </form>
+      </div>
+    </header>
+    <div class="admin-content">
