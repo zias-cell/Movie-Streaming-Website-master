@@ -1,0 +1,121 @@
+<%- include('../partials/admin-header') %>
+
+<a href="/admin/products" class="back-link">← Back to products</a>
+
+<form action="<%= isNew ? '/admin/products' : '/admin/products/' + product.id %>" method="post" class="form-wide">
+  <div class="form-cols">
+    <div class="form-col">
+      <section class="panel pad">
+        <h2>Details</h2>
+        <div class="field">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" value="<%= product.title || '' %>" required />
+        </div>
+        <div class="field">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" rows="6"><%= product.description || '' %></textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="category">Category</label>
+            <input type="text" id="category" name="category" value="<%= product.category || 'General' %>" list="catlist" />
+            <datalist id="catlist">
+              <option>Tops</option><option>Bottoms</option><option>Outerwear</option>
+              <option>Hoodies</option><option>Accessories</option><option>Footwear</option>
+            </datalist>
+          </div>
+          <div class="field">
+            <label for="sku">SKU</label>
+            <input type="text" id="sku" name="sku" value="<%= product.sku || '' %>" placeholder="RW-1001" />
+          </div>
+        </div>
+      </section>
+
+      <section class="panel pad">
+        <h2>Dropshipping &amp; supplier</h2>
+        <p class="muted sm">Where you fulfill this product from. Customers never see this — it's used to calculate your margin and to place supplier orders.</p>
+        <div class="field">
+          <label for="supplier_name">Supplier</label>
+          <input type="text" id="supplier_name" name="supplier_name" value="<%= product.supplier_name || '' %>" placeholder="AliExpress · Store name" />
+        </div>
+        <div class="field">
+          <label for="supplier_url">Supplier product URL</label>
+          <input type="url" id="supplier_url" name="supplier_url" value="<%= product.supplier_url || '' %>" placeholder="https://…" />
+        </div>
+        <div class="field">
+          <label for="supplier_cost">Your cost per unit (USD)</label>
+          <input type="number" step="0.01" min="0" id="supplier_cost" name="supplier_cost" value="<%= toDollars(product.supplier_cost_cents) %>" data-cost />
+        </div>
+      </section>
+    </div>
+
+    <div class="form-col">
+      <section class="panel pad">
+        <h2>Pricing</h2>
+        <div class="field">
+          <label for="price">Sale price (USD)</label>
+          <input type="number" step="0.01" min="0" id="price" name="price" value="<%= toDollars(product.price_cents) %>" required data-price />
+        </div>
+        <div class="field">
+          <label for="compare_at">Compare-at price (USD)</label>
+          <input type="number" step="0.01" min="0" id="compare_at" name="compare_at" value="<%= toDollars(product.compare_at_cents) %>" placeholder="Shown struck-through" />
+        </div>
+        <div class="margin-preview" id="marginPreview">Margin: —</div>
+      </section>
+
+      <section class="panel pad">
+        <h2>Inventory &amp; display</h2>
+        <div class="field">
+          <label for="stock">Stock quantity</label>
+          <input type="number" min="0" id="stock" name="stock" value="<%= product.stock != null ? product.stock : 100 %>" />
+        </div>
+        <div class="field">
+          <label for="rating">Rating (0–5)</label>
+          <input type="number" step="0.1" min="0" max="5" id="rating" name="rating" value="<%= product.rating != null ? product.rating : 4.7 %>" />
+        </div>
+        <div class="field">
+          <label for="image_color">Image color (hex)</label>
+          <div class="color-field">
+            <input type="text" id="image_color" name="image_color" value="<%= product.image_color || '4f46e5' %>" maxlength="6" />
+            <span class="swatch" id="swatch" style="background:#<%= product.image_color || '4f46e5' %>"></span>
+          </div>
+          <span class="muted sm">Product image is auto-generated from this color + the title.</span>
+        </div>
+        <div class="field checkbox">
+          <label><input type="checkbox" name="active" value="1" <%= product.active ? 'checked' : '' %> /> Active (visible in store)</label>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="form-bar">
+    <a href="/admin/products" class="btn btn-ghost">Cancel</a>
+    <button type="submit" class="btn btn-primary"><%= isNew ? 'Create product' : 'Save changes' %></button>
+  </div>
+</form>
+
+<script>
+  (function(){
+    var price = document.querySelector('[data-price]');
+    var cost = document.querySelector('[data-cost]');
+    var out = document.getElementById('marginPreview');
+    var colorInput = document.getElementById('image_color');
+    var swatch = document.getElementById('swatch');
+    function fmt(n){ return '$' + n.toFixed(2); }
+    function update(){
+      var p = parseFloat(price.value) || 0;
+      var c = parseFloat(cost.value) || 0;
+      var m = p - c;
+      var pct = p > 0 ? Math.round((m / p) * 100) : 0;
+      out.textContent = 'Margin: ' + fmt(m) + ' (' + pct + '%) per unit';
+      out.className = 'margin-preview ' + (m > 0 ? 'good' : 'bad');
+    }
+    [price, cost].forEach(function(el){ el && el.addEventListener('input', update); });
+    colorInput && colorInput.addEventListener('input', function(){
+      if (/^[0-9a-fA-F]{6}$/.test(colorInput.value)) swatch.style.background = '#' + colorInput.value;
+    });
+    update();
+  })();
+</script>
+
+<%- include('../partials/admin-footer') %>

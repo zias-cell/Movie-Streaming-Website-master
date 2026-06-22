@@ -1,0 +1,36 @@
+<%- include('../partials/admin-header') %>
+
+<div class="filter-bar">
+  <a href="/admin/orders" class="chip <%= !activeStatus ? 'active' : '' %>">All</a>
+  <% statuses.forEach(function(s){ %>
+    <a href="/admin/orders?status=<%= s %>" class="chip <%= activeStatus === s ? 'active' : '' %>"><%= s %></a>
+  <% }); %>
+</div>
+
+<% if (orders.length === 0) { %>
+  <div class="panel pad center"><p class="muted">No orders<%= activeStatus ? ' with status "' + activeStatus + '"' : ' yet' %>.</p></div>
+<% } else { %>
+<div class="panel">
+  <table class="table">
+    <thead>
+      <tr><th>Order</th><th>Date</th><th>Customer</th><th>Ship to</th><th>Status</th><th class="right">Profit</th><th class="right">Total</th></tr>
+    </thead>
+    <tbody>
+      <% orders.forEach(function(o){ %>
+        <% var profit = o.total_cents - o.shipping_cents - o.tax_cents - o.supplier_cost_cents; %>
+        <tr onclick="location.href='/admin/orders/<%= o.id %>'" class="clickable">
+          <td><strong><%= o.order_number %></strong></td>
+          <td class="muted sm"><%= o.created_at %></td>
+          <td><%= o.customer_name %><br><span class="muted sm"><%= o.email %></span></td>
+          <td class="muted sm"><%= o.city %>, <%= o.state %></td>
+          <td><span class="pill pill-<%= o.status %>"><%= o.status %></span></td>
+          <td class="right <%= profit > 0 ? 'good' : 'bad' %>"><%= money(profit) %></td>
+          <td class="right"><strong><%= money(o.total_cents) %></strong></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+<% } %>
+
+<%- include('../partials/admin-footer') %>

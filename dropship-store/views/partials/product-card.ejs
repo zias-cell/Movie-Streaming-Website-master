@@ -1,0 +1,29 @@
+<article class="card">
+  <a class="card-media" href="/product/<%= p.slug %>">
+    <img src="/img/product/<%= p.slug %>.svg" alt="<%= p.title %>" loading="lazy" width="600" height="600" />
+    <% if (p.compare_at_cents > p.price_cents) { %>
+      <% var pct = Math.round((1 - p.price_cents / p.compare_at_cents) * 100); %>
+      <span class="badge-sale">-<%= pct %>%</span>
+    <% } %>
+    <% if (p.stock <= 0) { %><span class="badge-out">Sold out</span><% } %>
+  </a>
+  <div class="card-body">
+    <span class="card-cat"><%= p.category %></span>
+    <a class="card-title" href="/product/<%= p.slug %>"><%= p.title %></a>
+    <div class="card-rating" aria-label="Rated <%= p.rating %> out of 5">
+      <span class="stars">★★★★★</span><span class="rating-num"><%= p.rating.toFixed(1) %></span>
+    </div>
+    <div class="card-price">
+      <span class="price"><%= money(p.price_cents) %></span>
+      <% if (p.compare_at_cents > p.price_cents) { %>
+        <span class="compare"><%= money(p.compare_at_cents) %></span>
+      <% } %>
+    </div>
+    <form action="/cart/add" method="post" class="card-add">
+      <input type="hidden" name="product_id" value="<%= p.id %>" />
+      <button type="submit" class="btn btn-primary btn-block" <%= p.stock <= 0 ? 'disabled' : '' %>>
+        <%= p.stock <= 0 ? 'Sold out' : 'Add to cart' %>
+      </button>
+    </form>
+  </div>
+</article>

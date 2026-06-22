@@ -1,0 +1,73 @@
+<%- include('../partials/admin-header') %>
+
+<div class="stat-grid">
+  <div class="stat">
+    <span class="stat-label">Revenue</span>
+    <span class="stat-value"><%= money(metrics.revenue) %></span>
+    <span class="stat-sub">across <%= metrics.orderCount %> order<%= metrics.orderCount === 1 ? '' : 's' %></span>
+  </div>
+  <div class="stat stat-good">
+    <span class="stat-label">Gross profit</span>
+    <span class="stat-value"><%= money(metrics.itemProfit) %></span>
+    <span class="stat-sub"><%= metrics.margin %>% margin</span>
+  </div>
+  <div class="stat">
+    <span class="stat-label">Supplier spend</span>
+    <span class="stat-value"><%= money(metrics.supplierSpend) %></span>
+    <span class="stat-sub">cost of goods</span>
+  </div>
+  <div class="stat <%= metrics.awaiting > 0 ? 'stat-warn' : '' %>">
+    <span class="stat-label">Awaiting fulfillment</span>
+    <span class="stat-value"><%= metrics.awaiting %></span>
+    <span class="stat-sub"><a href="/admin/orders?status=paid">view orders →</a></span>
+  </div>
+</div>
+
+<div class="panel-grid">
+  <section class="panel">
+    <div class="panel-head"><h2>Recent orders</h2><a href="/admin/orders">All orders →</a></div>
+    <% if (recentOrders.length === 0) { %>
+      <p class="muted pad">No orders yet. Share your store to get your first sale!</p>
+    <% } else { %>
+    <table class="table">
+      <thead><tr><th>Order</th><th>Customer</th><th>Status</th><th class="right">Total</th></tr></thead>
+      <tbody>
+        <% recentOrders.forEach(function(o){ %>
+        <tr onclick="location.href='/admin/orders/<%= o.id %>'" class="clickable">
+          <td><strong><%= o.order_number %></strong><br><span class="muted sm"><%= o.created_at %></span></td>
+          <td><%= o.customer_name %><br><span class="muted sm"><%= o.city %>, <%= o.state %></span></td>
+          <td><span class="pill pill-<%= o.status %>"><%= o.status %></span></td>
+          <td class="right"><%= money(o.total_cents) %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% } %>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Top sellers</h2></div>
+    <% if (topProducts.length === 0) { %>
+      <p class="muted pad">No sales data yet.</p>
+    <% } else { %>
+    <ul class="rank">
+      <% topProducts.forEach(function(p, i){ %>
+        <li><span class="rank-n"><%= i + 1 %></span><span class="rank-name"><%= p.title %></span><span class="rank-meta"><%= p.units %> sold · <%= money(p.profit) %> profit</span></li>
+      <% }); %>
+    </ul>
+    <% } %>
+
+    <div class="panel-head spaced"><h2>Low stock</h2><a href="/admin/products">Manage →</a></div>
+    <% if (lowStock.length === 0) { %>
+      <p class="muted pad">All products are well stocked. 👍</p>
+    <% } else { %>
+    <ul class="lowstock">
+      <% lowStock.forEach(function(p){ %>
+        <li><a href="/admin/products/<%= p.id %>/edit"><%= p.title %></a><span class="stock-pill <%= p.stock === 0 ? 'zero' : '' %>"><%= p.stock %> left</span></li>
+      <% }); %>
+    </ul>
+    <% } %>
+  </section>
+</div>
+
+<%- include('../partials/admin-footer') %>

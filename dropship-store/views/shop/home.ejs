@@ -1,0 +1,67 @@
+<%- include('../partials/header') %>
+
+<section class="hero">
+  <div class="hero-text">
+    <p class="eyebrow">🇺🇸 Curated for the US · Fast nationwide shipping</p>
+    <h1><%= store.store_tagline %></h1>
+    <p class="hero-sub">Baggy denim, graphic tees, racing jerseys &amp; throwback fits — the men's Y2K wardrobe, curated and shipped to your door in 1–2 business days.</p>
+    <div class="hero-cta">
+      <a href="/shop" class="btn btn-primary btn-lg">Shop best-sellers</a>
+      <a href="#new" class="btn btn-ghost btn-lg">New arrivals</a>
+    </div>
+    <div class="hero-trust">
+      <span>✓ Free shipping over <%= money(freeShipThreshold) %></span>
+      <span>✓ 30-day returns</span>
+      <span>✓ Secure checkout</span>
+    </div>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="hero-emoji">👖</div>
+  </div>
+</section>
+
+<section class="cat-tiles">
+  <% categories.forEach(function(c){ %>
+    <a class="cat-tile" href="/shop?category=<%= encodeURIComponent(c.category) %>">
+      <span class="cat-tile-name"><%= c.category %></span>
+      <span class="cat-tile-count"><%= c.n %> items</span>
+    </a>
+  <% }); %>
+</section>
+
+<% if (featured.length) { %>
+<section class="section">
+  <div class="section-head">
+    <h2>🔥 Best-sellers on sale</h2>
+    <a href="/shop?sort=price-asc" class="see-all">See all →</a>
+  </div>
+  <div class="grid">
+    <% featured.forEach(function(product){ %>
+      <%- include('../partials/product-card', { p: product }) %>
+    <% }); %>
+  </div>
+</section>
+<% } %>
+
+<section class="section" id="new">
+  <div class="section-head">
+    <h2>✨ New arrivals</h2>
+    <a href="/shop" class="see-all">Shop all →</a>
+  </div>
+  <div class="grid">
+    <% newArrivals.forEach(function(product){ %>
+      <%- include('../partials/product-card', { p: product }) %>
+    <% }); %>
+  </div>
+</section>
+
+<section class="value-props">
+  <div class="vp"><span class="vp-ico">🚚</span><h3>Fast US shipping</h3><p>Orders ship within 1–2 business days from our fulfillment partners.</p></div>
+  <div class="vp"><span class="vp-ico">🔒</span><h3>Secure checkout</h3><p>Your payment and data are protected end-to-end at checkout.</p></div>
+  <div class="vp"><span class="vp-ico">↩️</span><h3>30-day returns</h3><p>Not in love with it? Send it back within 30 days for a refund.</p></div>
+  <div class="vp"><span class="vp-ico">💬</span><h3>US-based support</h3><p>Real humans ready to help at <%= store.support_email %>.</p></div>
+</section>
+
+<%- include('../partials/footer') %>

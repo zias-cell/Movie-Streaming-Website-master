@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= title %> · <%= storeName %></title>
+  <meta name="description" content="<%= store.store_tagline %>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>" />
+</head>
+<body>
+  <% if (announcement) { %>
+  <div class="announce"><%= announcement %></div>
+  <% } %>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark">🛍️</span>
+        <span class="brand-name"><%= storeName %></span>
+      </a>
+
+      <form class="search" action="/shop" method="get" role="search">
+        <input type="search" name="q" placeholder="Search products…" aria-label="Search products" />
+        <button type="submit" aria-label="Search">⌕</button>
+      </form>
+
+      <nav class="header-actions">
+        <a href="/admin" class="ghost-link" title="Admin panel">Admin</a>
+        <a href="/cart" class="cart-link">
+          <span class="cart-ico">🛒</span>
+          <span class="cart-label">Cart</span>
+          <% if (cartCount > 0) { %><span class="cart-badge"><%= cartCount %></span><% } %>
+        </a>
+      </nav>
+    </div>
+
+    <nav class="catnav">
+      <% var _activeCat = (typeof activeCategory !== 'undefined') ? activeCategory : ''; %>
+      <% var _q = (typeof query !== 'undefined') ? query : ''; %>
+      <div class="wrap catnav-inner">
+        <a href="/shop" class="<%= currentPath === '/shop' && !_activeCat && !_q ? 'active' : '' %>">All</a>
+        <% navCategories.forEach(function(c){ %>
+          <a href="/shop?category=<%= encodeURIComponent(c) %>" class="<%= _activeCat === c ? 'active' : '' %>"><%= c %></a>
+        <% }); %>
+      </div>
+    </nav>
+  </header>
+
+  <main class="wrap main">
