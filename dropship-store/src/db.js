@@ -95,13 +95,13 @@ db.exec(`
 // Settings helpers (simple key/value store with typed defaults)
 // ---------------------------------------------------------------------------
 const DEFAULT_SETTINGS = {
-  store_name: 'NovaNest',
-  store_tagline: 'Trending home, tech & wellness essentials — fast US shipping.',
-  support_email: process.env.ADMIN_EMAIL || 'support@novanest.shop',
-  shipping_flat_cents: '599',
-  free_shipping_threshold_cents: '5000',
+  store_name: 'REWIND',
+  store_tagline: "Men's Y2K streetwear — baggy denim, bold graphics & throwback fits.",
+  support_email: process.env.ADMIN_EMAIL || 'support@rewind.shop',
+  shipping_flat_cents: '699',
+  free_shipping_threshold_cents: '7500',
   tax_rate_bps: '725', // 7.25% default sales tax (basis points)
-  announcement: 'Free shipping on US orders over $50 · Ships in 1–2 business days',
+  announcement: 'Free US shipping over $75 · New drops every week 🛹',
 };
 
 function seedDefaultSettings() {
@@ -144,6 +144,7 @@ function getAllSettings() {
 module.exports = {
   db,
   DB_PATH,
+  DEFAULT_SETTINGS,
   getSetting,
   getSettingInt,
   setSetting,

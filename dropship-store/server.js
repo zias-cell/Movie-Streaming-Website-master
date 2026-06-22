@@ -36,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: IS_PROD ? '7d' 
 // Sessions (persisted in SQLite)
 app.use(
   session({
-    name: 'novanest.sid',
+    name: 'rewind.sid',
     secret: process.env.SESSION_SECRET || 'dev-insecure-secret-change-me',
     resave: false,
     saveUninitialized: false,

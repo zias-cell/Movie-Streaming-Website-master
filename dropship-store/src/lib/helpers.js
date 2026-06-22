@@ -12,14 +12,14 @@ function slugify(text) {
     .slice(0, 80) || 'item';
 }
 
-/** Human-friendly, hard-to-guess order number e.g. "NN-7F3K9Q2". */
+/** Human-friendly, hard-to-guess order number e.g. "RW-7F3K9Q2". */
 function generateOrderNumber() {
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let s = '';
   for (let i = 0; i < 7; i++) {
     s += alphabet[crypto.randomInt(alphabet.length)];
   }
-  return `NN-${s}`;
+  return `RW-${s}`;
 }
 
 /**

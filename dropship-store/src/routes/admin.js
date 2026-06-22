@@ -227,7 +227,7 @@ router.get('/settings', (req, res) => {
 });
 
 router.post('/settings', (req, res) => {
-  setSetting('store_name', String(req.body.store_name || 'NovaNest').trim());
+  setSetting('store_name', String(req.body.store_name || 'REWIND').trim());
   setSetting('store_tagline', String(req.body.store_tagline || '').trim());
   setSetting('support_email', String(req.body.support_email || '').trim());
   setSetting('announcement', String(req.body.announcement || '').trim());

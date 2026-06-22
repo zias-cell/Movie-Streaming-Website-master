@@ -1,4 +1,4 @@
-# NovaNest dropshipping store
+# REWIND dropshipping store
 FROM node:22-alpine
 
 WORKDIR /app

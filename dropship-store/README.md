@@ -1,7 +1,8 @@
-# 🛍️ NovaNest — Self-Hosted Dropshipping Store
+# 🛍️ REWIND — Self-Hosted Y2K Streetwear Store
 
-A complete, self-hosted dropshipping storefront **and** admin panel, built for the
-**US market**. No SaaS lock-in, no monthly fees — clone it, run it, own it.
+A complete, self-hosted dropshipping storefront **and** admin panel for a **men's
+Y2K clothing** brand, built for the **US market**. No SaaS lock-in, no monthly
+fees — clone it, run it, own it.
 
 It ships with a polished customer storefront (catalog, cart, USD checkout with US
 states + sales tax + shipping rules) and a full admin back office for managing
@@ -52,11 +53,11 @@ Then open:
 - **Admin panel** → http://localhost:3000/admin
 
 On first run the app auto-creates the admin account and seeds a demo catalog of
-trending US dropshipping products. The default admin credentials are printed to
+trending men's Y2K streetwear. The default admin credentials are printed to
 the console:
 
 ```
-email:    admin@novanest.shop
+email:    admin@rewind.shop
 password: changeme123
 ```
 
@@ -76,7 +77,7 @@ cp .env.example .env
 | ----------------- | ---------------------- | ----------------------------------------- |
 | `PORT`            | `3000`                 | HTTP port                                 |
 | `SESSION_SECRET`  | (insecure dev default) | Signs session cookies — **set this**      |
-| `ADMIN_EMAIL`     | `admin@novanest.shop`  | First-run admin login                     |
+| `ADMIN_EMAIL`     | `admin@rewind.shop`    | First-run admin login                     |
 | `ADMIN_PASSWORD`  | `changeme123`          | First-run admin password                  |
 | `NODE_ENV`        | `development`          | `production` enables secure cookies       |
 | `DB_PATH`         | `data/store.db`        | SQLite database file location             |
@@ -147,12 +148,12 @@ This is a standard Node app and runs anywhere Node 22+ is available.
 ### Docker
 
 ```bash
-docker build -t novanest .
+docker build -t rewind .
 docker run -p 3000:3000 \
   -e SESSION_SECRET="$(openssl rand -hex 32)" \
   -e NODE_ENV=production \
   -v "$(pwd)/data:/app/data" \
-  novanest
+  rewind
 ```
 
 The `-v` volume keeps your SQLite database (products, orders, sessions) outside
